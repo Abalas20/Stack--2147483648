@@ -9,7 +9,7 @@ import java.util.Optional;
 
 public interface UserService {
 
-    UserDTO createUser(SignupDTO signupDTO);
+    Optional<UserDTO> createUser(SignupDTO signupDTO);
 
     Optional<User> getUserByEmail(String email);
 

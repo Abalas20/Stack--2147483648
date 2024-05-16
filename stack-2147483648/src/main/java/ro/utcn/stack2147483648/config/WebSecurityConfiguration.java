@@ -20,6 +20,9 @@ import ro.utcn.stack2147483648.filter.JwtRequestFilter;
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
+    private static final String AUTHENTICATION_ENDPOINT = "/authentication";
+    private static final String SIGN_UP_ENDPOINT = "/sign-up";
+
     private final JwtRequestFilter jwtRequestFilter;
 
     public WebSecurityConfiguration(JwtRequestFilter jwtRequestFilter) {
@@ -31,7 +34,7 @@ public class WebSecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/authentication", "/sign-up").permitAll()
+                        .requestMatchers(AUTHENTICATION_ENDPOINT, SIGN_UP_ENDPOINT).permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session
@@ -47,7 +50,11 @@ public class WebSecurityConfiguration {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-        return configuration.getAuthenticationManager();
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) {
+        try {
+            return configuration.getAuthenticationManager();
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to get the authentication manager", e);
+        }
     }
 }

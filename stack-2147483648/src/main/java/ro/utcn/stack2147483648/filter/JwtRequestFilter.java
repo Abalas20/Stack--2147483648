@@ -1,5 +1,7 @@
 package ro.utcn.stack2147483648.filter;
 
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -34,7 +36,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             token = authHeader.substring(7);
-            username = jwtService.extractUsername(token);
+            try {
+                username = jwtService.extractUsername(token);
+            } catch (ExpiredJwtException e) {
+                logger.error("JWT token is expired");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is expired");
+                return;
+            } catch (MalformedJwtException e) {
+                logger.error("JWT token is malformed");
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token is malformed");
+                return;
+            } catch (Exception e) {
+                logger.error("Failed to extract username from token", e);
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Failed to extract username from token");
+                return;
+            }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {

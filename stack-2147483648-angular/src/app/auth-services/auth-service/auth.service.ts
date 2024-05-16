@@ -28,21 +28,21 @@ export class AuthService {
           return throwError(() => error);
         }),
         map((res: HttpResponse<any>) => {
-          if (res.body) {
-            this.storage.saveUser(res.body);
-          }
+          const body = res.body;
           const token = res.headers.get(AUTH_HEADER);
-          if (token) {
+          if (body && token) {
             const tokenLength = token.length;
             const bearerToken = token.substring(7, tokenLength);
+            this.storage.saveUser(body);
             this.storage.saveToken(bearerToken);
           }
           return res;
         })
       );
-    }
+  }
 
   log(message: string): void {
     console.log("User Auth Service" + message);
   }
 }
+

@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
-import jdk.jfr.Unsigned;
 import lombok.Data;
 
 @Entity
@@ -31,7 +30,7 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @Pattern(regexp = "\\d{10}", message = "Phone number must be 10 digits")
+    @Pattern(regexp = "^\\(?(\\d{3})\\)?[- ]?(\\d{3})[- ]?(\\d{4})$", message = "Invalid phone number")
     @Column(name = "phone")
     private String phone;
 

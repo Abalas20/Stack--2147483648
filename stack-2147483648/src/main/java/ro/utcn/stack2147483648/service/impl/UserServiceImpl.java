@@ -1,7 +1,5 @@
 package ro.utcn.stack2147483648.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.utcn.stack2147483648.dto.SignupDTO;
 import ro.utcn.stack2147483648.dto.UserDTO;
@@ -15,35 +13,28 @@ import java.util.Optional;
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
-    private UserRepository userRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserServiceImpl(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     @Override
-    public UserDTO createUser(SignupDTO signupDTO) {
+    public Optional<UserDTO> createUser(SignupDTO signupDTO) {
         User user = new User(
                 signupDTO.getLastName(),
                 signupDTO.getFirstName(),
                 signupDTO.getPhone(),
                 signupDTO.getEmail(),
-                new BCryptPasswordEncoder().encode(signupDTO.getPassword()),
+                passwordEncoder.encode(signupDTO.getPassword()),
                 signupDTO.getUsername()
         );
 
         User createdUser = userRepository.save(user);
 
-        return new UserDTO(
-                createdUser.getId(),
-                createdUser.getLastName(),
-                createdUser.getFirstName(),
-                createdUser.getPhone(),
-                createdUser.getEmail(),
-                createdUser.getPassword(),
-                createdUser.getUsername(),
-                createdUser.getRole(),
-                createdUser.getScore()
-        );
+        return Optional.of(convertToUserDTO(createdUser));
     }
 
     @Override
@@ -51,9 +42,22 @@ public class UserServiceImpl implements UserService {
         return userRepository.findFirstByEmail(email);
     }
 
-
     @Override
     public boolean hasEmail(String email) {
         return userRepository.findFirstByEmail(email).isPresent();
+    }
+
+    private UserDTO convertToUserDTO(User user) {
+        return new UserDTO(
+                user.getId(),
+                user.getLastName(),
+                user.getFirstName(),
+                user.getPhone(),
+                user.getEmail(),
+                user.getPassword(),
+                user.getUsername(),
+                user.getRole(),
+                user.getScore()
+        );
     }
 }

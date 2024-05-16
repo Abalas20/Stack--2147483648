@@ -1,9 +1,11 @@
 package ro.utcn.stack2147483648.controller;
 
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.extern.slf4j.Slf4j;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
@@ -21,32 +23,30 @@ import ro.utcn.stack2147483648.service.jwt.JwtService;
 import java.io.IOException;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 public class AuthenticationController {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
+    private final AuthenticationManager authenticationManager;
+    private final UserDetailsService userDetailsService;
+    private final UserService userService;
+    private final JwtService jwtService;
 
-    @Autowired
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private JwtService jwtService;
-
-    public final static String TOKEN_PREFIX = "Bearer ";
-    public final static String HEADER_STRING = "Authorization";
+    public AuthenticationController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserService userService, JwtService jwtService) {
+        this.authenticationManager = authenticationManager;
+        this.userDetailsService = userDetailsService;
+        this.userService = userService;
+        this.jwtService = jwtService;
+    }
 
     @PostMapping("/authentication")
-    public void createAuthenticationToken(@RequestBody AuthenticationRequest authRequest, HttpServletResponse response) throws IOException, JSONException {
+    public ResponseEntity<String> createAuthenticationToken(@RequestBody AuthenticationRequest authRequest, HttpServletResponse response) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authRequest.getEmail(), authRequest.getPassword()));
         } catch (BadCredentialsException badCredentialsException) {
-            throw new BadCredentialsException("Incorrect Email or Password");
+            return new ResponseEntity<>("Incorrect Email or Password", HttpStatus.UNAUTHORIZED);
         } catch (DisabledException disabledException) {
-            response.sendError(HttpServletResponse.SC_NOT_FOUND, "User is not created");
+            return new ResponseEntity<>("User is not created", HttpStatus.NOT_FOUND);
         }
 
         final UserDetails userDetails = userDetailsService.loadUserByUsername(authRequest.getEmail());
@@ -55,12 +55,18 @@ public class AuthenticationController {
 
         final String jwt = jwtService.generateToken(userDetails);
 
-        if (user.isPresent()) {
-            response.getWriter().write(new JSONObject().put("userId", user.get().getId()).toString());
-        }
+        user.ifPresent(u -> {
+            try {
+                response.getWriter().write(new JSONObject().put("userId", u.getId()).toString());
+            } catch (IOException | JSONException e) {
+                log.error("Error occurred while processing user authentication", e);
+            }
+        });
 
         response.addHeader("Access-Control-Expose-Headers", "Authorization");
         response.setHeader("Access-Control-Allow-Headers", "Authorization X-PINGOTHER, X-Requested-With, Content-Type, Accept, X-Custom-header");
-        response.setHeader(HEADER_STRING, TOKEN_PREFIX + jwt);
+        response.setHeader("Authorization", "Bearer " + jwt);
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

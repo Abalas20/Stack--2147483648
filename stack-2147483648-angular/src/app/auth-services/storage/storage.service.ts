@@ -14,21 +14,21 @@ export class StorageService {
   constructor() { }
 
   public saveUser(user: any) {
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(USER_KEY);
       localStorage.setItem(USER_KEY, JSON.stringify(user));
     }
   }
 
   public saveToken(token: string) {
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.setItem(TOKEN_KEY, token);
     }
   }
 
   static getToken(): string {
-    return localStorage ? localStorage.getItem(TOKEN_KEY) || '' : '';
+    return typeof localStorage !== 'undefined' ? localStorage.getItem(TOKEN_KEY) || '' : '';
   }
 
   static isUserLoggedIn(): boolean {
@@ -36,9 +36,9 @@ export class StorageService {
   }
 
   static logout() {
-    if (localStorage) {
+    if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
-    }
+      }
   }
 }

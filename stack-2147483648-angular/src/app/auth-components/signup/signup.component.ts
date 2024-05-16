@@ -28,28 +28,6 @@ export class SignupComponent {
       phone:['', Validators.required],
     });
   }
-
-  // signup() {
-  //   console.log(this.signupForm.value);
-  //   this.service.signup(this.signupForm.value).subscribe((response)=> {
-  //     console.log(response);
-  //     if (response.id != null) {
-  //       this.snackBar.open(
-  //         "You're account has been successfully created!",
-  //         'Close',
-  //         {duration: 5000}
-  //       );
-  //       this.router.navigateByUrl('/login');
-  //     } else {
-  //       this.snackBar.open(response.message, 'Close', {duration: 5000});
-  //     }
-  //   }, (error:any) => {
-  //     this.snackBar.open(
-  //       "Registration failed, please try again",
-  //       'Close', {duration: 5000}
-  //     );
-  //   })
-  // }
   
   async signup() {
     console.log(this.signupForm.value);

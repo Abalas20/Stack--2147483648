@@ -1,0 +1,38 @@
+.navbar {
+    display: flex;
+    align-items: center;
+    padding: 20px 16px;
+    background-color: #f48024;
+}
+    
+.navbar-brand {
+    font-size: 40px;
+    font-weight: 600;
+    margin-right: 16px;
+    color: #e6edf3; 
+}
+
+.spacer {
+    flex: 1;
+}
+
+button {
+    text-transform: uppercase;
+    margin-left: 8px;
+    border: 1px solid #1b75d0; 
+    padding: 8px 16px;
+    border-radius: 4px;
+    color: #ffffff;
+    background-color: #155ca2;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+button.active {
+    font-weight: 600;
+}
+
+.custom-toolbar {
+    padding: 8px 16px;
+    border-radius: 4px;
+}

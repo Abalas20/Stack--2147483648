@@ -1,11 +1,12 @@
-import { Component, inject, OnInit} from '@angular/core';
+import { Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
 import { QuestionService } from '../../user-services/question-service/question.service';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatChipEditedEvent, MatChipInputEvent } from '@angular/material/chips';
+import { MatChipInputEvent } from '@angular/material/chips';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Observable, startWith, map, of } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable, startWith, map } from 'rxjs';
 import { TagService } from '../../user-services/question-service/tag.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-post-question',
@@ -13,15 +14,21 @@ import { TagService } from '../../user-services/question-service/tag.service';
   styleUrls: ['./post-question.component.scss']
 })
 export class PostQuestionComponent  {
+  
+  readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
-  tags: { name: string }[] = [];
+  tags: string[] = [];
+  filteredTags: Observable<string[]>;
+  allTags: string[] = [];
+  tagCtrl = new FormControl('');
+
+  @ViewChild('tagInput')
+  tagInput!: ElementRef<HTMLInputElement>;
+
   isSubmitting: boolean = false;
   addOnBlur = true;
   validateForm: FormGroup;
-  allTags: string[] = [];
-  filteredTags: Observable<string[]>;
 
-  readonly separatorKeysCodes = [ENTER, COMMA] as const;
   announcer = inject(LiveAnnouncer);
 
   constructor(
@@ -39,50 +46,55 @@ export class PostQuestionComponent  {
       this.allTags = tags;
     });
 
-    this.filteredTags = this.validateForm.get('tags')!.valueChanges.pipe(
-      startWith(''),
-      map((tag: string | null) => tag ? this.filterTags(tag) : this.allTags.slice())
+    this.filteredTags = this.tagCtrl.valueChanges.pipe(
+      startWith(null),
+      map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
     );
   }
 
-  ngOnInit(): void {}
-
   add(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
-    if (value) {
-      this.tags.push({ name: value });
+
+    if (value && !this.tags.includes(value)) {
+      this.tags.push(value);
+      this.validateForm.controls['tags'].setValue(this.tags);
     }
     event.chipInput!.clear();
+
+    this.tagCtrl.setValue(null);
   }
 
   remove(tag: any): void {
     const index = this.tags.indexOf(tag);
+
     if (index >= 0) {
       this.tags.splice(index, 1);
+
       this.announcer.announce(`Removed ${tag.name}`);
     }
   }
 
-  edit(tag: any, event: MatChipEditedEvent): void {
-    const value = event.value.trim();
+  selected(event: MatAutocompleteSelectedEvent): void {
+    const value = event.option.viewValue;
 
-    if (!value) {
-      this.remove(tag);
-      return;
+    if (!this.tags.includes(value)) {
+      this.tags.push(value);
+      this.validateForm.controls['tags'].setValue(this.tags);
     }
-    const index = this.tags.indexOf(tag);
-    if (index >= 0) {
-      this.tags[index] = { name: value };
-      this.announcer.announce(`Edited ${tag.name} to ${value}`);
-    }
+    this.tagInput.nativeElement.value = '';
+    this.tagCtrl.setValue(null);
   }
 
-  filterTags(value: string | null): string[] {
-    const filterValue = (value || '').toLowerCase();
-    return this.allTags.filter(tag => tag.toLowerCase().includes(filterValue));
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allTags.filter(tag => 
+      tag.toLowerCase().includes(filterValue) && !this.tags.includes(tag)
+    );
   }
 
   postQuestion(): void {
+    console.log(this.validateForm.value);
     this.isSubmitting = true;
     this.service.postQuestion(this.validateForm.value).subscribe((res) => {
       console.log(res);

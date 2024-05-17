@@ -14,6 +14,10 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
+
+
+import {AsyncPipe} from '@angular/common';
+
 @NgModule({
   declarations: [
     DashboardComponent,
@@ -32,6 +36,16 @@ import {MatAutocompleteModule} from '@angular/material/autocomplete';
     MatIconModule,
     MatButtonModule,
     MatAutocompleteModule,
+
+
+    ////
+    FormsModule,
+    MatFormFieldModule,
+    MatChipsModule,
+    MatIconModule,
+    MatAutocompleteModule,
+    ReactiveFormsModule,
+    AsyncPipe,
   ]
 })
 export class UserModule { }

@@ -10,4 +10,6 @@ public interface QuestionService {
     QuestionDTO addQuestion(QuestionDTO questionDTO);
 
     List<Tag> getAllTags();
+
+    List<QuestionDTO> getAllQuestions();
 }

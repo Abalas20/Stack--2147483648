@@ -35,6 +35,11 @@ export class StorageService {
     return !!this.getToken();
   }
 
+  static getUserId(): any {
+    const user = localStorage.getItem(USER_KEY);
+    return user ? JSON.parse(user).userId : null;
+  }
+
   static logout() {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY);

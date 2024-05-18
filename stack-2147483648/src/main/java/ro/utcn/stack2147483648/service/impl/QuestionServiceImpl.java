@@ -45,6 +45,7 @@ public class QuestionServiceImpl implements QuestionService {
                             .collect(Collectors.toList());
 
                     question.setTags(tags);
+                    question.setAuthor(user);
                     question = questionRepository.save(question);
                     return mapToDTO(question);
                 })
@@ -56,12 +57,20 @@ public class QuestionServiceImpl implements QuestionService {
         return tagRepository.findAll();
     }
 
+    @Override
+    public List<QuestionDTO> getAllQuestions() {
+        return questionRepository.findAll().stream()
+                .map(this::mapToDTO)
+                .collect(Collectors.toList());
+    }
+
     private QuestionDTO mapToDTO(Question question) {
         QuestionDTO dto = new QuestionDTO();
         dto.setId(question.getId());
         dto.setTitle(question.getTitle());
         dto.setBody(question.getBody());
         dto.setTags(question.getTags());
+        dto.setUserId(question.getAuthor().getId());
         return dto;
     }
 }

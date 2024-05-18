@@ -7,6 +7,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { Observable, startWith, map } from 'rxjs';
 import { TagService } from '../../user-services/question-service/tag.service';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { StorageService } from '../../../auth-services/storage/storage.service';
 
 @Component({
   selector: 'app-post-question',
@@ -94,9 +95,15 @@ export class PostQuestionComponent  {
   }
 
   postQuestion(): void {
-    console.log(this.validateForm.value);
+    let requestBody: any = {
+      title: this.validateForm.value['title'],
+      body: this.validateForm.value['body'],
+      userId: StorageService.getUserId(),
+      tags: this.tags.map(tag => ({ tagName: tag }))
+    };
+    console.log(requestBody);
     this.isSubmitting = true;
-    this.service.postQuestion(this.validateForm.value).subscribe((res) => {
+    this.service.postQuestion(requestBody).subscribe((res) => {
       console.log(res);
       this.isSubmitting = false;
       this.validateForm.reset();

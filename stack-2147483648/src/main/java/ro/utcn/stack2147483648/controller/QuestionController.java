@@ -35,4 +35,10 @@ public class QuestionController {
         return ResponseEntity.ok(tags);
     }
 
+    @GetMapping("/question")
+    public ResponseEntity<List<QuestionDTO>> getAllQuestions() {
+        List<QuestionDTO> questions = questionService.getAllQuestions();
+        return ResponseEntity.ok(questions);
+    }
+
 }

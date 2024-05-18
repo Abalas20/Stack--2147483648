@@ -4,9 +4,9 @@
         <h2 class="question-caption">Post Question</h2>
         <form [formGroup]="validateForm">
             <div class="form-input">
-                <mat-form-field appearance="fill">
+                <mat-form-field class="form-field" appearance="fill">
                     <mat-label>Title</mat-label>
-                    <input matInput placeholder="Title" formControlName="title" />
+                    <input class="input-field" type="text" placeholder=""matInput placeholder="Title" formControlName="title" />
                     <mat-error
                         *ngIf="validateForm.get('title')?.invalid && (validateForm.get('title')?.dirty || validateForm.get('title')?.touched)">
                         Title is required!
@@ -14,7 +14,7 @@
                 </mat-form-field>
             </div>
             <div class="form-input">
-                <mat-form-field appearance="fill">
+                <mat-form-field class="form-field" appearance="fill">
                     <mat-label>Body</mat-label>
                     <textarea matInput placeholder="Body" rows="6" formControlName="body"></textarea>
                     <mat-error
@@ -25,8 +25,10 @@
             </div>
             
             <div class="form-input">
-                <mat-form-field appearance="fill">
+                <mat-form-field class="form-field" appearance="fill">
                     <mat-label>Tags</mat-label>
+                    <h2></h2>
+                    <small class="form-text text-muted">Enter tags to describe what your question is about. Start typing to see suggestions.</small>
                     <mat-chip-grid #chipGrid aria-label="Enter tags" formControlName="tags">
                       @for (tag of tags; track tag) {
                         <mat-chip-row (removed)="remove(tag)">
@@ -37,7 +39,7 @@
                         </mat-chip-row>
                       }
                     </mat-chip-grid>
-                    <input placeholder="New tag..." #tagInput [formControl]="tagCtrl"
+                    <input class="test" placeholder="e.g (mongodb pandas c++)" #tagInput [formControl]="tagCtrl"
                       [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
                       [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                       (matChipInputTokenEnd)="add($event)"/>

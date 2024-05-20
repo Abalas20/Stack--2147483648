@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
+    background-color: #0d1117;
 }
 
 .login-card {
@@ -10,7 +11,7 @@
     width: 50%;
     padding: 20px;
     text-align: center;
-    background-color: #f1f2f3;
+    background-color: #e6edf3;
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
@@ -26,6 +27,7 @@
     color: #3b4045;
     margin-bottom: 20px; 
     text-align: center; margin-bottom: 20px;
+    color: #609fde;
 }
 
 .form-input mat-label {
@@ -37,11 +39,11 @@
     width: 100%;
     text-transform: uppercase;
     margin-left: 8px;
-    border: 1px solid #609fde; 
+    border: 1px solid #292e36; 
     padding: 8px 16px;
     border-radius: 4px;
-    color: white;
-    background-color: #1b75d0;
+    color: #c9d1d9;
+    background-color: #21262d;
     cursor: pointer;
     transition: all 0.3s ease;
 }

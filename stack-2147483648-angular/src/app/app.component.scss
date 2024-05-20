@@ -2,14 +2,17 @@
     display: flex;
     align-items: center;
     padding: 20px 16px;
-    background-color: #f48024;
+    background-color:  #010409;
+    border: solid 1px #30363d;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
-    
+
 .navbar-brand {
     font-size: 40px;
     font-weight: 600;
     margin-right: 16px;
-    color: #e6edf3; 
+    color: #e6edf3;
+    transition: color 0.3s ease;
 }
 
 .spacer {
@@ -19,13 +22,19 @@
 button {
     text-transform: uppercase;
     margin-left: 8px;
-    border: 1px solid #1b75d0; 
+    border: 1px solid #292e36;
     padding: 8px 16px;
     border-radius: 4px;
-    color: #ffffff;
-    background-color: #155ca2;
+    color: #c9d1d9;
+    background-color: #21262d;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    background-color: #808993;
+    color: #666b5c;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 button.active {
@@ -35,4 +44,6 @@ button.active {
 .custom-toolbar {
     padding: 8px 16px;
     border-radius: 4px;
+    background: #f8f9fa;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

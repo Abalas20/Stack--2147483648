@@ -20,6 +20,24 @@ export class QuestionService {
      );
   }
 
+  getAllQuestions(pageNumber: number): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'api/questions/' + pageNumber,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  getQuestionById(id: number): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'api/question/' + id,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  updateQuestion(questionDto: any, userId: number): Observable<any> {
+    return this.http.put<[]>(BASIC_URL + 'api/question/' + userId, questionDto,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeader: HttpHeaders = new HttpHeaders();
     return authHeader.set('Authorization', 'Bearer ' + StorageService.getToken());

@@ -12,4 +12,7 @@ public class QuestionDTO {
     private String body;
     private List<Tag> tags;
     private Long userId;
+    private String author;
+    private String creationDate;
+    private String url;
 }

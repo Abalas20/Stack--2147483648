@@ -37,7 +37,7 @@ export class StorageService {
 
   static getUserId(): any {
     const user = localStorage.getItem(USER_KEY);
-    return user ? JSON.parse(user).userId : null;
+    return user ? JSON.parse(user) : null;
   }
 
   static logout() {

@@ -1,21 +1,21 @@
-import { Component, ElementRef, inject, OnInit, ViewChild} from '@angular/core';
-import { QuestionService } from '../../user-services/question-service/question.service';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatChipInputEvent } from '@angular/material/chips';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { Observable, startWith, map } from 'rxjs';
-import { TagService } from '../../user-services/question-service/tag.service';
-import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { StorageService } from '../../../auth-services/storage/storage.service';
+import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { MatChipInputEvent } from '@angular/material/chips';
+import { Observable, map, startWith } from 'rxjs';
+import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { QuestionService } from '../../user-services/question-service/question.service';
+import { TagService } from '../../user-services/question-service/tag.service';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
-  selector: 'app-post-question',
-  templateUrl: './post-question.component.html',
-  styleUrls: ['./post-question.component.scss']
+  selector: 'app-edit-question',
+  templateUrl: './edit-question.component.html',
+  styleUrl: './edit-question.component.scss'
 })
-export class PostQuestionComponent  {
+export class EditQuestionComponent {
   
   readonly separatorKeysCodes = [ENTER, COMMA] as const;
 
@@ -29,9 +29,12 @@ export class PostQuestionComponent  {
 
   isSubmitting: boolean = false;
   addOnBlur = true;
-  validateForm: FormGroup;
+  validateForm!: FormGroup;
 
   announcer = inject(LiveAnnouncer);
+
+  questionId: number = this.route.snapshot.params['questionId'];
+  question: any;
 
   constructor(
     private service: QuestionService,
@@ -39,21 +42,39 @@ export class PostQuestionComponent  {
     private fb: FormBuilder,
     private route: ActivatedRoute,
   ) {
-    this.validateForm = this.fb.group({
-      title: ['', [Validators.required]],
-      body: ['', [Validators.required]],
-      url: ['', [Validators.required]],
-      tags: [[], [Validators.required]],
-    });
+    this.getQuestionById(this.questionId);
 
     this.tagService.getTags().subscribe(tags => {
-      this.allTags = tags;
+      this.tags = tags;
     });
 
     this.filteredTags = this.tagCtrl.valueChanges.pipe(
       startWith(null),
       map((tag: string | null) => (tag ? this._filter(tag) : this.allTags.slice())),
     );
+  }
+
+  getQuestionById(id: number): void {
+    this.service.getQuestionById(id).subscribe(
+      (response) => {
+        this.question = response.question;
+        console.log(response);
+
+        this.initializeForm();
+      },
+      (error) => {
+        console.log(error);
+      }
+    );
+  }
+
+  initializeForm(): void {
+    this.validateForm = this.fb.group({
+      title: [this.question.title, [Validators.required]],
+      body: [this.question.body, [Validators.required]],
+      url: [this.question.url, [Validators.required]],
+      tags: [this.question.tags, [Validators.required]],
+    });
   }
 
   add(event: MatChipInputEvent): void {
@@ -103,11 +124,12 @@ export class PostQuestionComponent  {
       body: this.validateForm.value['body'],
       userId: StorageService.getUserId(),
       url: this.validateForm.value['url'],
-      tags: this.tags.map(tag => ({ tagName: tag }))
+      tags: this.tags.map(tag => ({ tagName: tag })),
+      id: this.questionId,
     };
     console.log(requestBody);
     this.isSubmitting = true;
-    this.service.postQuestion(requestBody).subscribe((res) => {
+    this.service.updateQuestion(requestBody, StorageService.getUserId()).subscribe((res) => {
       console.log(res);
       this.isSubmitting = false;
       this.validateForm.reset();

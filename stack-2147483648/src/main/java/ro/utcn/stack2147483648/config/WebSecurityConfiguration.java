@@ -20,7 +20,7 @@ import ro.utcn.stack2147483648.filter.JwtRequestFilter;
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
-    private static final String AUTHENTICATION_ENDPOINT = "/authentication";
+    private static final String AUTHENTICATION_ENDPOINT = "/login";
     private static final String SIGN_UP_ENDPOINT = "/sign-up";
 
     private final JwtRequestFilter jwtRequestFilter;

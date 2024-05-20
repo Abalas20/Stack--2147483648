@@ -23,7 +23,16 @@
                     </mat-error>
                 </mat-form-field>
             </div>
-            
+            <div class="form-input">
+            <mat-form-field class="form-field" appearance="fill">
+              <mat-label>Image</mat-label>
+              <input class="input-field" type="url" placeholder=""matInput placeholder="Url" formControlName="url" />
+              <mat-error
+                  *ngIf="validateForm.get('url')?.invalid && (validateForm.get('url')?.dirty || validateForm.get('url')?.touched)">
+                  Image is required!
+              </mat-error>
+          </mat-form-field>
+        </div>
             <div class="form-input">
                 <mat-form-field class="form-field" appearance="fill">
                     <mat-label>Tags</mat-label>
@@ -50,7 +59,7 @@
                     </mat-autocomplete>
                   </mat-form-field>
             </div>
-            <button mat-raised-button color="primary" class="login-form-button login-form-margin" type="submit" (click)="postQuestion()" [disabled]="validateForm.invalid">Post Question</button>
+            <button mat-raised-button color="c9d1d9" background="21262d" class="login-form-button login-form-margin" type="submit" (click)="postQuestion()" [disabled]="validateForm.invalid" routerLink="/user/dashboard" routerLinkActive="active">Post Question</button>
         </form>
     </div>
 </div>

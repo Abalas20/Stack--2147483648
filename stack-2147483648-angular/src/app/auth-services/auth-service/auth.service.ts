@@ -18,9 +18,9 @@ export class AuthService {
   signup(signupRequest: any): Observable<any> {
     return this.http.post(BASE_URL + "sign-up", signupRequest);
   }
-
+  
   login(loginRequest: any): Observable<any> {
-    return this.http.post(BASE_URL + 'authentication', loginRequest, { observe: 'response' })
+    return this.http.post(BASE_URL + 'login', loginRequest, { observe: 'response' })
       .pipe(
         tap(__ => this.log('User Authentication')),
         catchError(error => {
@@ -29,12 +29,9 @@ export class AuthService {
         }),
         map((res: HttpResponse<any>) => {
           const body = res.body;
-          const token = res.headers.get(AUTH_HEADER);
-          if (body && token) {
-            const tokenLength = token.length;
-            const bearerToken = token.substring(7, tokenLength);
-            this.storage.saveUser(body);
-            this.storage.saveToken(bearerToken);
+          if (body) {
+            this.storage.saveUser(body.userId);
+            this.storage.saveToken(body.jwtToken);
           }
           return res;
         })

@@ -1,0 +1,54 @@
+<div class="view">
+  <div class="question-card" style="margin-top: 30px;">
+      <h2>{{question.title}}</h2>
+      <p>Asked On: <b>{{question.creationDate}}</b> by {{question.author}}</p>
+      <div class="question-body">
+        <p>{{question.body}}</p>
+        <img [src]="question.url" alt="Question Image" style="max-width: 50%; height: 50%; margin-top: 20px;" *ngIf="question.url">
+        <div class="tag-list">
+          <mat-chip-listbox>
+            <mat-chip color="primary" *ngFor="let tag of question.tags">{{tag.tagName}}</mat-chip>
+          </mat-chip-listbox>
+        </div>
+      </div>
+    </div>
+    
+    <div class="answer-list" style="margin-top: 30px;">
+      <h2>Answers</h2>
+      <div *ngFor="let answer of answers" class="answer-card" style="margin-bottom: 20px;">
+        <div *ngIf="answer.userId == userId">
+          <button mat-button [routerLink]="'/user/edit-answer/' + answer.id" routerLinkActive="active">Edit</button>
+        </div>
+        <p>{{answer.body}}</p>
+        <p><b>Answered On:</b> {{answer.createdDate}} by {{answer.author}}</p>
+        <img *ngIf="answer.url" [src]="answer.url" alt="Answer Image" style="margin-top: 10px; max-width: 50%; height: 50%;">
+      </div>
+    </div>
+    
+    <div class="answer-section" style="margin-top: 30px;">
+      <div>
+        <div>
+          <h2>Post Answer</h2>
+        </div>
+      
+        <form [formGroup]="validateForm" (ngSubmit)="addAnswer()">
+          <div class="form-field">
+            <mat-form-field appearance="fill">
+              <mat-label>Subject</mat-label>
+              <textarea matInput rows="2" placeholder="Answer ..." formControlName="body"></textarea>
+            </mat-form-field>
+          </div>
+          <div class="form-input">
+            <mat-form-field class="form-field" appearance="fill">
+              <mat-label>Image</mat-label>
+              <input class="input-field" type="url" placeholder="Url" matInput formControlName="url" />
+              <mat-error *ngIf="validateForm.get('url')?.invalid && (validateForm.get('url')?.dirty || validateForm.get('url')?.touched)">
+                Image is required!
+              </mat-error>
+            </mat-form-field>
+          </div>
+          <button mat-raised-button color="accent">Post Answer</button>
+        </form>
+      </div>
+    </div>
+</div>

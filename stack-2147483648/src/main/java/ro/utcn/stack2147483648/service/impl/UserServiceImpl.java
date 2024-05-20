@@ -23,17 +23,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Optional<UserDTO> createUser(SignupDTO signupDTO) {
-        User user = new User(
-                signupDTO.getLastName(),
-                signupDTO.getFirstName(),
-                signupDTO.getPhone(),
-                signupDTO.getEmail(),
-                passwordEncoder.encode(signupDTO.getPassword()),
-                signupDTO.getUsername()
-        );
-
+        User user = convertToUser(signupDTO);
         User createdUser = userRepository.save(user);
-
         return Optional.of(convertToUserDTO(createdUser));
     }
 
@@ -45,6 +36,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean hasEmail(String email) {
         return userRepository.findFirstByEmail(email).isPresent();
+    }
+
+    private User convertToUser(SignupDTO signupDTO) {
+        return new User(
+                signupDTO.getLastName(),
+                signupDTO.getFirstName(),
+                signupDTO.getPhone(),
+                signupDTO.getEmail(),
+                passwordEncoder.encode(signupDTO.getPassword()),
+                signupDTO.getUsername()
+        );
     }
 
     private UserDTO convertToUserDTO(User user) {

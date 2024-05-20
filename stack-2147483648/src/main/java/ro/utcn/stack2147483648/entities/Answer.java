@@ -6,40 +6,23 @@ import lombok.Data;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
-@Table(name = "question")
-public class Question {
+@Table(name = "answer")
+public class Answer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
-    @Column(name = "title")
-    private String title;
-
-    @NotEmpty
     @Lob
     @Column(name = "body", length = 512)
     private String body;
 
-    @NotNull
-    @Column(name = "created_date")
     private Date createdDate;
-
-    @ManyToMany
-    @JoinTable(
-            name = "question_tag",
-            joinColumns = @JoinColumn(name = "question_id"),
-            inverseJoinColumns = @JoinColumn(name = "tag_id")
-    )
-    private List<Tag> tags;
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -48,7 +31,13 @@ public class Question {
     @JsonIgnore
     private User author;
 
+    @NotNull
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "question_id", nullable = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JsonIgnore
+    private Question question;
+
     @Column(name = "url")
     private String url;
-
 }

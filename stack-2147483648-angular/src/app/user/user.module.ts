@@ -13,15 +13,22 @@ import {MatInputModule} from '@angular/material/input';
 import {MatIconModule} from '@angular/material/icon';
 import {MatButtonModule} from '@angular/material/button';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
-
+import {MatCardModule} from '@angular/material/card';
+import {MatPaginatorModule} from '@angular/material/paginator'
 
 
 import {AsyncPipe} from '@angular/common';
+import { ViewQuestionComponent } from './components/view-question/view-question.component';
+import { EditQuestionComponent } from './components/edit-question/edit-question.component';
+import { EditAnswerComponent } from './components/edit-answer/edit-answer.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
-    PostQuestionComponent
+    PostQuestionComponent,
+    ViewQuestionComponent,
+    EditQuestionComponent,
+    EditAnswerComponent
   ],
   imports: [
     CommonModule,
@@ -36,9 +43,7 @@ import {AsyncPipe} from '@angular/common';
     MatIconModule,
     MatButtonModule,
     MatAutocompleteModule,
-
-
-    ////
+    MatCardModule,
     FormsModule,
     MatFormFieldModule,
     MatChipsModule,
@@ -46,6 +51,7 @@ import {AsyncPipe} from '@angular/common';
     MatAutocompleteModule,
     ReactiveFormsModule,
     AsyncPipe,
+    MatPaginatorModule,
   ]
 })
 export class UserModule { }

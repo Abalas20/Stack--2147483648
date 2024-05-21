@@ -14,4 +14,6 @@ public interface UserService {
     Optional<User> getUserByEmail(String email);
 
     boolean hasEmail(String email);
+
+    Optional<UserDTO> getUserById(Long userId);
 }

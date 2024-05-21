@@ -71,5 +71,31 @@ public class QuestionController {
         }
     }
 
+    @DeleteMapping("/question/{questionId}/{userId}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId, @PathVariable Long userId) {
+        if (questionService.deleteQuestion(questionId, userId)) {
+            return ResponseEntity.ok("Question deleted!");
+        } else {
+            return ResponseEntity.badRequest().body("Question not found!");
+        }
+    }
+
+    @GetMapping("/questions/search-by-text/{text}/{pageNumber}")
+    public ResponseEntity<AllQuestionResponseDTO> searchQuestionsByText(@PathVariable String text, @PathVariable int pageNumber) {
+        AllQuestionResponseDTO allQuestionResponseDTO = questionService.searchQuestionsByText(text, pageNumber);
+        return ResponseEntity.ok(allQuestionResponseDTO);
+    }
+
+    @GetMapping("/questions/search-by-username/{username}/{pageNumber}")
+    public ResponseEntity<AllQuestionResponseDTO> searchQuestionsByUsername(@PathVariable String username, @PathVariable int pageNumber) {
+        AllQuestionResponseDTO allQuestionResponseDTO = questionService.searchQuestionsByUsername(username, pageNumber);
+        return ResponseEntity.ok(allQuestionResponseDTO);
+    }
+
+    @GetMapping("/questions/search-by-tag/{tag}/{pageNumber}")
+    public ResponseEntity<AllQuestionResponseDTO> searchQuestionsByTag(@PathVariable String tag, @PathVariable int pageNumber) {
+        AllQuestionResponseDTO allQuestionResponseDTO = questionService.searchQuestionsByTag(tag, pageNumber);
+        return ResponseEntity.ok(allQuestionResponseDTO);
+    }
 
 }

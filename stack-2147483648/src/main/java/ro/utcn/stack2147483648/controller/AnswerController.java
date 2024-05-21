@@ -47,4 +47,14 @@ public class AnswerController {
             return ResponseEntity.ok(editedAnswerDTO.get());
         }
     }
+
+    //delete answer
+    @DeleteMapping("/{answerId}/{userId}")
+    public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId, @PathVariable Long userId) {
+        if (answerService.deleteAnswer(answerId, userId)) {
+            return ResponseEntity.ok("Answer deleted!");
+        } else {
+            return ResponseEntity.badRequest().body("Something went wrong!");
+        }
+    }
 }

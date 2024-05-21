@@ -38,6 +38,11 @@ public class UserServiceImpl implements UserService {
         return userRepository.findFirstByEmail(email).isPresent();
     }
 
+    @Override
+    public Optional<UserDTO> getUserById(Long userId) {
+        return userRepository.findById(userId).map(this::convertToUserDTO);
+    }
+
     private User convertToUser(SignupDTO signupDTO) {
         return new User(
                 signupDTO.getLastName(),

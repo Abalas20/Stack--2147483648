@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { QuestionService } from '../../user-services/question-service/question.service';
+import { ActivatedRoute } from '@angular/router';
 import { StorageService } from '../../../auth-services/storage/storage.service';
+import { QuestionService } from '../../user-services/question-service/question.service';
 
 @Component({
-  selector: 'app-dashboard',
-  templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  selector: 'app-filtered-by-tag-question',
+  templateUrl: './filtered-by-tag-question.component.html',
+  styleUrl: './filtered-by-tag-question.component.scss'
 })
-export class DashboardComponent {
-
+export class FilteredByTagQuestionComponent {
   questions: any[] = [];
   pageNum: number = 0;
   total: number = 0;
@@ -16,13 +16,14 @@ export class DashboardComponent {
 
     constructor(
         private service: QuestionService,
+        private route: ActivatedRoute,
     ) { 
         this.getAllQuestions();
         this.userId = StorageService.getUserId();
     }
 
     getAllQuestions() {
-      this.service.getAllQuestions(this.pageNum).subscribe((response) => {
+      this.service.getAllQuestionsByTag(this.route.snapshot.params['tag'], this.pageNum).subscribe((response) => {
         console.log(response);
         this.questions = response.questions;
         this.total = response.totalPages * 5;

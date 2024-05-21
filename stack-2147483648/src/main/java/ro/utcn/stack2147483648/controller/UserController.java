@@ -9,9 +9,7 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ro.utcn.stack2147483648.dto.AuthenticationRequest;
 import ro.utcn.stack2147483648.dto.AuthenticationResponse;
 import ro.utcn.stack2147483648.dto.SignupDTO;
@@ -59,6 +57,15 @@ public class UserController {
         String jwt = generateToken(userDetails);
         Long userId = getUserId(userDetails);
         return new ResponseEntity<>(new AuthenticationResponse(userId, jwt), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<?> getUser(@PathVariable Long userId) {
+        Optional<UserDTO> user = userService.getUserById(userId);
+        if (user.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
 
     private void authenticateUser(AuthenticationRequest authRequest) {

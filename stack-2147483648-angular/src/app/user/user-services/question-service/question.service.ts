@@ -38,8 +38,35 @@ export class QuestionService {
     );
   }
 
+  getAllQuestionsByText(text: string, pageNumber: number): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'api/questions/search-by-text/' + text + '/' + pageNumber,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  getAllQuestionsByUsername(username: string, pageNumber: number): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'api/questions/search-by-username/' + username + '/' + pageNumber,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+  
+  getAllQuestionsByTag(tag: string, pageNumber: number): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'api/questions/search-by-tag/' + tag + '/' + pageNumber,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  //Deadline -> No time to make User service
+  getUser(id: any): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'user/' + id,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeader: HttpHeaders = new HttpHeaders();
     return authHeader.set('Authorization', 'Bearer ' + StorageService.getToken());
   }
+
+
 }

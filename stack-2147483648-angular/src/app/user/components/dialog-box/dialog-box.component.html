@@ -1,0 +1,10 @@
+<form [formGroup]="validateForm">
+  <p>Enter filter search!</p>
+  <mat-form-field class="form-field" appearance="fill">
+    <textarea matInput placeholder="text" rows="6" formControlName="text"></textarea>
+    <mat-error *ngIf="validateForm.get('text')?.invalid && (validateForm.get('text')?.dirty || validateForm.get('text')?.touched)">
+      Body is required!
+    </mat-error>
+  </mat-form-field>
+  <button mat-button (click)="onConfirmClick()" [disabled]="validateForm.invalid">Ok</button>
+</form>

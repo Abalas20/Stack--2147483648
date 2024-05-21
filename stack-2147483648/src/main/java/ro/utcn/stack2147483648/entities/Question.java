@@ -25,7 +25,6 @@ public class Question {
     private String title;
 
     @NotEmpty
-    @Lob
     @Column(name = "body", length = 512)
     private String body;
 

@@ -13,4 +13,6 @@ public interface AnswerService {
     Optional<AnswerDTO> getAnswer(Long answerId);
 
     Optional<AnswerDTO> editAnswer(AnswerDTO answerDTO, Long userId);
+
+    boolean deleteAnswer(Long answerId, Long userId);
 }

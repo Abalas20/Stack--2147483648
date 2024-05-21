@@ -72,5 +72,16 @@ public class AnswerServiceImpl implements AnswerService {
         return Optional.empty();
     }
 
+    @Override
+    public boolean deleteAnswer(Long answerId, Long userId) {
+        Optional<Answer> answer = answerRepository.findById(answerId);
+        if (answer.isPresent() && answer.get().getAuthor().getId().equals(userId)) {
+            answerRepository.delete(answer.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
 }

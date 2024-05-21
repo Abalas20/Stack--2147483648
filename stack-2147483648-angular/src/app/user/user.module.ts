@@ -21,6 +21,11 @@ import {AsyncPipe} from '@angular/common';
 import { ViewQuestionComponent } from './components/view-question/view-question.component';
 import { EditQuestionComponent } from './components/edit-question/edit-question.component';
 import { EditAnswerComponent } from './components/edit-answer/edit-answer.component';
+import { FilteredByTextQuestionComponent } from './components/filtered-by-text-question/filtered-by-text-question.component';
+import {MatDialogModule} from '@angular/material/dialog';
+import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
+import { FilteredByUserQuestionComponent } from './components/filtered-by-user-question/filtered-by-user-question.component';
+import { FilteredByTagQuestionComponent } from './components/filtered-by-tag-question/filtered-by-tag-question.component';
 
 @NgModule({
   declarations: [
@@ -28,7 +33,11 @@ import { EditAnswerComponent } from './components/edit-answer/edit-answer.compon
     PostQuestionComponent,
     ViewQuestionComponent,
     EditQuestionComponent,
-    EditAnswerComponent
+    EditAnswerComponent,
+    FilteredByTextQuestionComponent,
+    DialogBoxComponent,
+    FilteredByUserQuestionComponent,
+    FilteredByTagQuestionComponent,
   ],
   imports: [
     CommonModule,
@@ -52,6 +61,7 @@ import { EditAnswerComponent } from './components/edit-answer/edit-answer.compon
     ReactiveFormsModule,
     AsyncPipe,
     MatPaginatorModule,
+    MatDialogModule,
   ]
 })
 export class UserModule { }

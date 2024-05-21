@@ -6,6 +6,9 @@ import { PostQuestionComponent } from './components/post-question/post-question.
 import { ViewQuestionComponent } from './components/view-question/view-question.component';
 import { EditQuestionComponent } from './components/edit-question/edit-question.component';
 import { EditAnswerComponent } from './components/edit-answer/edit-answer.component';
+import { FilteredByTextQuestionComponent } from './components/filtered-by-text-question/filtered-by-text-question.component';
+import { FilteredByUserQuestionComponent } from './components/filtered-by-user-question/filtered-by-user-question.component';
+import { FilteredByTagQuestionComponent } from './components/filtered-by-tag-question/filtered-by-tag-question.component';
 
 const routes: Routes = [
   {path:'dashboard', component: DashboardComponent, canActivate: [userGuard]},
@@ -13,6 +16,9 @@ const routes: Routes = [
   {path:'question/:questionId', component: ViewQuestionComponent, canActivate: [userGuard]},
   {path:'edit-question/:questionId', component: EditQuestionComponent, canActivate: [userGuard]},
   {path:'edit-answer/:answerId', component: EditAnswerComponent, canActivate: [userGuard]},
+  {path:'question/filtered/:text', component: FilteredByTextQuestionComponent, canActivate: [userGuard]},
+  {path:'question/filtered/username/:username', component: FilteredByUserQuestionComponent, canActivate: [userGuard]},
+  {path:'question/filtered/tag/:tag', component: FilteredByTagQuestionComponent, canActivate: [userGuard]},
 ];
 
 @NgModule({

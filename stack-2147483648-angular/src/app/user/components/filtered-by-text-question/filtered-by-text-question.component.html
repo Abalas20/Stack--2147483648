@@ -1,0 +1,43 @@
+<div style="min-height: 91vh; padding: 30px;" *ngIf="questions" class="background">
+    <div>
+        <div class="container">
+            <ng-container *ngIf="questions.length <= 0; else questionList">
+                <mat-card class="empty-message">
+                    <mat-card-content>
+                        <mat-icon>sentiment_dissatisfied</mat-icon>
+                        <p>No questions found.</p>
+                    </mat-card-content>
+                </mat-card>
+            </ng-container>
+
+            <ng-template #questionList>
+                <div class="child" *ngFor="let question of questions">
+                    <div *ngIf="question.userId == userId">
+                        <button mat-button [routerLink]="'/user/edit-question/' + question.id" routerLinkActive="active">Edit</button>
+                    </div>
+                    <a [routerLink]="'/user/question/' + question.id" class="question-link">
+                        <h2 class="question-title">{{ question.title }}</h2>
+                        <div class="question-content">
+                            <p>{{ question.body }}</p>
+                            <img [src]="question.url" alt="Question Image" *ngIf="question.url" style="max-width: 50%; height: 50%;">
+                            <div class="tag-container">
+                                <mat-chip-listbox>
+                                    <mat-chip color="primary" *ngFor="let tag of question.tags">{{ tag.tagName }}</mat-chip>
+                                </mat-chip-listbox>
+                            </div>
+                            <hr>
+                            <h5>
+                                Posted By: <b>{{ question.author }}</b>
+                                Posted On: <b>{{ question.creationDate }}</b>
+                            </h5>
+                        </div>
+                    </a>
+                </div>
+            </ng-template>
+
+            <div class="pagination">
+                <mat-paginator class="color-pagiantion" [length]="total" [pageIndex]="pageNum" [pageSize]="5" (page)="pageIndexChange($event)"></mat-paginator>
+            </div>
+        </div>
+    </div>
+</div>

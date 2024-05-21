@@ -9,6 +9,8 @@ import ro.utcn.stack2147483648.dto.AllQuestionResponseDTO;
 import ro.utcn.stack2147483648.dto.QuestionDTO;
 import ro.utcn.stack2147483648.entities.Question;
 import ro.utcn.stack2147483648.entities.Tag;
+import ro.utcn.stack2147483648.entities.User;
+import ro.utcn.stack2147483648.exception.UserNotFoundException;
 import ro.utcn.stack2147483648.repository.QuestionRepository;
 import ro.utcn.stack2147483648.repository.TagRepository;
 import ro.utcn.stack2147483648.repository.UserRepository;
@@ -107,6 +109,58 @@ public class QuestionServiceImpl implements QuestionService {
                     question = questionRepository.save(question);
                     return mapToDTO(question);
                 });
+    }
+
+    @Override
+    public boolean deleteQuestion(Long questionId, Long userId) {
+        Optional<Question> question = questionRepository.findById(questionId);
+        if (question.isPresent() && question.get().getAuthor().getId().equals(userId)) {
+            questionRepository.delete(question.get());
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    @Transactional
+    public AllQuestionResponseDTO searchQuestionsByText(String text, int pageNumber) {
+        Pageable paging = PageRequest.of(pageNumber, PAGE_SIZE);
+        Page<Question> questionsPage = questionRepository.findAllByTitleContainingOrBodyContainingOrderByCreatedDateDesc(text, text, paging);
+        AllQuestionResponseDTO allQuestionResponseDTO = new AllQuestionResponseDTO();
+        allQuestionResponseDTO.setQuestions(getQuestionListDto(questionsPage));
+        allQuestionResponseDTO.setPageNumber(questionsPage.getNumber());
+        allQuestionResponseDTO.setTotalPages(questionsPage.getTotalPages());
+
+        return allQuestionResponseDTO;
+    }
+
+    @Override
+    public AllQuestionResponseDTO searchQuestionsByUsername(String username, int pageNumber) {
+        Pageable paging = PageRequest.of(pageNumber, PAGE_SIZE);
+        Optional<User> user = userRepository.findFirstByUsername(username);
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+        Page<Question> questionsPage = questionRepository.findAllByAuthorOrderByCreatedDateDesc(user.get(), paging);
+        AllQuestionResponseDTO allQuestionResponseDTO = new AllQuestionResponseDTO();
+        allQuestionResponseDTO.setQuestions(getQuestionListDto(questionsPage));
+        allQuestionResponseDTO.setPageNumber(questionsPage.getNumber());
+        allQuestionResponseDTO.setTotalPages(questionsPage.getTotalPages());
+
+        return allQuestionResponseDTO;
+    }
+
+    @Override
+    public AllQuestionResponseDTO searchQuestionsByTag(String tag, int pageNumber) {
+        Pageable paging = PageRequest.of(pageNumber, PAGE_SIZE);
+        Page<Question> questionsPage = questionRepository.findAllByTags_TagNameOrderByCreatedDateDesc(tag, paging);
+        AllQuestionResponseDTO allQuestionResponseDTO = new AllQuestionResponseDTO();
+        allQuestionResponseDTO.setQuestions(getQuestionListDto(questionsPage));
+        allQuestionResponseDTO.setPageNumber(questionsPage.getNumber());
+        allQuestionResponseDTO.setTotalPages(questionsPage.getTotalPages());
+
+        return allQuestionResponseDTO;
     }
 
     private QuestionDTO mapToDTO(Question question) {

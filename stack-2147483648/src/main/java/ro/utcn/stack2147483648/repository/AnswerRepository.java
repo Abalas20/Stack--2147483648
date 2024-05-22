@@ -9,5 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<Answer, Long> {
-    Optional<List<Answer>> findAllByQuestionId(Long questionId);
+    Optional<List<Answer>> findAllByQuestionIdOrderByVoteCountDesc(Long questionId);
+    Optional<Answer> findById(Long id);
 }

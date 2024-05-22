@@ -10,10 +10,10 @@
     <mat-toolbar class="navbar">
         <span class="navbar-brand">Stack -2147483648</span>
         <span class="spacer"></span>
+        <button mat-button routerLink="/user/dashboard" routerLinkActive="active">Dashboard</button>
         <button mat-button (click)="openDialog()" routerLinkActive="active">Find by text</button>
         <button mat-button (click)="openDialog2()" routerLinkActive="active">Find by author</button>
         <button mat-button (click)="openDialog3()" routerLinkActive="active">Find by tag</button>
-        <button mat-button routerLink="/user/dashboard" routerLinkActive="active">Dashboard</button>
         <button mat-button (click)="myQuestions()" routerLinkActive="active">See my questions</button>
         <button mat-button routerLink="/user/question" routerLinkActive="active">Post Question</button>
         <button mat-button (click)="logout()" routerLinkActive="active">Logout</button>

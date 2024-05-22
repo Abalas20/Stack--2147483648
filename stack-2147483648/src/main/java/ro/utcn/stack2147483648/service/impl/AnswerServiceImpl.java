@@ -4,9 +4,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.utcn.stack2147483648.dto.AnswerDTO;
 import ro.utcn.stack2147483648.entities.Answer;
+import ro.utcn.stack2147483648.entities.AnswerVote;
 import ro.utcn.stack2147483648.entities.Question;
 import ro.utcn.stack2147483648.entities.User;
 import ro.utcn.stack2147483648.repository.AnswerRepository;
+import ro.utcn.stack2147483648.repository.AnswerVoteRepository;
 import ro.utcn.stack2147483648.repository.QuestionRepository;
 import ro.utcn.stack2147483648.repository.UserRepository;
 import ro.utcn.stack2147483648.service.AnswerService;
@@ -23,11 +25,13 @@ public class AnswerServiceImpl implements AnswerService {
     private final AnswerRepository answerRepository;
     private final QuestionRepository questionRepository;
     private final UserRepository userRepository;
+    private final AnswerVoteRepository answerVoteRepository;
 
-    public AnswerServiceImpl(AnswerRepository answerRepository, QuestionRepository questionRepository, UserRepository userRepository) {
+    public AnswerServiceImpl(AnswerRepository answerRepository, QuestionRepository questionRepository, UserRepository userRepository, AnswerVoteRepository answerVoteRepository) {
         this.answerRepository = answerRepository;
         this.questionRepository = questionRepository;
         this.userRepository = userRepository;
+        this.answerVoteRepository = answerVoteRepository;
     }
 
     @Override
@@ -42,7 +46,7 @@ public class AnswerServiceImpl implements AnswerService {
             answer.setQuestion(question.get());
             answer.setUrl(answerDTO.getUrl());
             Answer savedAnswer = answerRepository.save(answer);
-            return Optional.of(new AnswerDTO(savedAnswer.getId(), savedAnswer.getBody(), getCreationDate(savedAnswer.getCreatedDate()), savedAnswer.getAuthor().getId(), savedAnswer.getQuestion().getId(), savedAnswer.getUrl(), user.get().getUsername()));
+            return Optional.of(new AnswerDTO(savedAnswer.getId(), savedAnswer.getBody(), getCreationDate(savedAnswer.getCreatedDate()), savedAnswer.getAuthor().getId(), savedAnswer.getQuestion().getId(), savedAnswer.getUrl(), user.get().getUsername(), 0));
         }
         return Optional.empty();
     }
@@ -50,14 +54,14 @@ public class AnswerServiceImpl implements AnswerService {
     @Override
     @Transactional
     public Optional<List<AnswerDTO>> getAnswers(Long questionId) {
-        return answerRepository.findAllByQuestionId(questionId).map(answers -> answers.stream()
-                .map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(),answer.getUrl(), answer.getAuthor().getUsername()))
+        return answerRepository.findAllByQuestionIdOrderByVoteCountDesc(questionId).map(answers -> answers.stream()
+                .map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(),answer.getUrl(), answer.getAuthor().getUsername(),getVoteCount(answer.getId())))
                 .toList());
     }
 
     @Override
     public Optional<AnswerDTO> getAnswer(Long answerId) {
-        return answerRepository.findById(answerId).map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(), answer.getUrl(), answer.getAuthor().getUsername()));
+        return answerRepository.findById(answerId).map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(), answer.getUrl(), answer.getAuthor().getUsername(), answer.getVoteCount()));
     }
 
     @Override
@@ -67,7 +71,7 @@ public class AnswerServiceImpl implements AnswerService {
             answer.get().setBody(answerDTO.getBody());
             answer.get().setUrl(answerDTO.getUrl());
             Answer editedAnswer = answerRepository.save(answer.get());
-            return Optional.of(new AnswerDTO(editedAnswer.getId(), editedAnswer.getBody(), getCreationDate(editedAnswer.getCreatedDate()), editedAnswer.getAuthor().getId(), editedAnswer.getQuestion().getId(), editedAnswer.getUrl(), editedAnswer.getAuthor().getUsername()));
+            return Optional.of(new AnswerDTO(editedAnswer.getId(), editedAnswer.getBody(), getCreationDate(editedAnswer.getCreatedDate()), editedAnswer.getAuthor().getId(), editedAnswer.getQuestion().getId(), editedAnswer.getUrl(), editedAnswer.getAuthor().getUsername(), editedAnswer.getVoteCount()));
         }
         return Optional.empty();
     }
@@ -83,5 +87,8 @@ public class AnswerServiceImpl implements AnswerService {
         }
     }
 
+    private int getVoteCount(Long answerId) {
+        return answerVoteRepository.findAllByAnswerId(answerId).stream().mapToInt(AnswerVote::getValue).sum();
+    }
 
 }

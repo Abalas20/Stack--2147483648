@@ -10,4 +10,6 @@ import lombok.Setter;
 public class AuthenticationResponse {
     private Long userId;
     private String jwtToken;
+    private String role;
+    private String status;
 }

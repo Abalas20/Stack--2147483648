@@ -16,4 +16,10 @@ public interface UserService {
     boolean hasEmail(String email);
 
     Optional<UserDTO> getUserById(Long userId);
+
+    Optional<Double> getUserScore(Long userId);
+
+    Optional<String> getUserRole(Long userId);
+
+    Optional<String> getUserStatus(Long userId);
 }

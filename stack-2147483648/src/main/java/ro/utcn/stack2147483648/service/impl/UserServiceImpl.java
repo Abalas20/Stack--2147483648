@@ -43,6 +43,21 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).map(this::convertToUserDTO);
     }
 
+    @Override
+    public Optional<Double> getUserScore(Long userId) {
+        return userRepository.findById(userId).map(User::getScore);
+    }
+
+    @Override
+    public Optional<String> getUserRole(Long userId) {
+        return userRepository.findById(userId).map(User::getRole);
+    }
+
+    @Override
+    public Optional<String> getUserStatus(Long userId) {
+        return userRepository.findById(userId).map(User::getStatus);
+    }
+
     private User convertToUser(SignupDTO signupDTO) {
         return new User(
                 signupDTO.getLastName(),

@@ -1,7 +1,7 @@
 <div class="view">
   <div class="question-card" style="margin-top: 30px;">
       <h2>{{question.title}}</h2>
-      <p>Asked On: <b>{{question.creationDate}}</b> by {{question.author}}</p>
+      <p>Asked On: <b>{{question.creationDate}}</b> by {{question.author}} score: {{score}}</p>
       <div class="question-body">
         <p>{{question.body}}</p>
         <img [src]="question.url" alt="Question Image" style="max-width: 50%; height: 50%; margin-top: 20px;" *ngIf="question.url">
@@ -27,11 +27,12 @@
     <div class="answer-list" style="margin-top: 30px;">
       <h2>Answers</h2>
       <div *ngFor="let answer of answers" class="answer-card" style="margin-bottom: 20px;">
-        <div *ngIf="answer.userId == userId">
+        <div *ngIf="answer.userId == userId || role == 'admin'">
           <button mat-button [routerLink]="'/user/edit-answer/' + answer.id" routerLinkActive="active">Edit</button>
+          <button mat-button (click) = "delete(answer.id)">Delete</button>
         </div>
         <p>{{answer.body}}</p>
-        <p><b>Answered On:</b> {{answer.createdDate}} by {{answer.author}}</p>
+        <p><b>Answered On:</b> {{answer.createdDate}} by {{answer.author}} score: {{answer.authorScore}}</p>
         <img *ngIf="answer.url" [src]="answer.url" alt="Answer Image" style="margin-top: 10px; max-width: 50%; height: 50%;">
         <div class="vote-section">
           <p>Votes: {{answer.voteCount}}</p>

@@ -32,8 +32,8 @@ export class QuestionService {
     );
   }
 
-  updateQuestion(questionDto: any, userId: number): Observable<any> {
-    return this.http.put<[]>(BASIC_URL + 'api/question/' + userId, questionDto,
+  updateQuestion(questionDto: any, userId: number, role: string): Observable<any> {
+    return this.http.put<[]>(BASIC_URL + 'api/question/' + userId + '/' + role, questionDto,
       { headers: this.createAuthorizationHeader() }
     );
   }
@@ -56,9 +56,28 @@ export class QuestionService {
     );
   }
 
+  deleteQuestionById(id: number, userId: number, role: string): Observable<any> {
+    return this.http.delete<[]>(BASIC_URL + 'api/question/' + id + '/' + userId + '/' + role,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+
   //Deadline -> No time to make User service
   getUser(id: any): Observable<any> {
     return this.http.get<[]>(BASIC_URL + 'user/' + id,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  getUserScore(id: any): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'user/score/' + id,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  getUserRole(id: any): Observable<any> {
+    return this.http.get<[]>(BASIC_URL + 'user/role/' + id,
       { headers: this.createAuthorizationHeader() }
     );
   }

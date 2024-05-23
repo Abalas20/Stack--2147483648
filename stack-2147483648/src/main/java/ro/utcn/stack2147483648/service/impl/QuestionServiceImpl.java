@@ -92,9 +92,9 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Override
     @Transactional
-    public Optional<QuestionDTO> updateQuestion(QuestionDTO questionDTO, Long userId) {
+    public Optional<QuestionDTO> updateQuestion(QuestionDTO questionDTO, Long userId, String role) {
         return questionRepository.findById(questionDTO.getId())
-                .filter(question -> question.getAuthor().getId().equals(userId))
+                .filter(question -> question.getAuthor().getId().equals(userId) || "admin".equals(role))
                 .map(question -> {
                     question.setTitle(questionDTO.getTitle());
                     question.setBody(questionDTO.getBody());
@@ -112,9 +112,9 @@ public class QuestionServiceImpl implements QuestionService {
     }
 
     @Override
-    public boolean deleteQuestion(Long questionId, Long userId) {
+    public boolean deleteQuestion(Long questionId, Long userId, String role) {
         Optional<Question> question = questionRepository.findById(questionId);
-        if (question.isPresent() && question.get().getAuthor().getId().equals(userId)) {
+        if (question.isPresent() && (question.get().getAuthor().getId().equals(userId) || "admin".equals(role))) {
             questionRepository.delete(question.get());
             return true;
         } else {

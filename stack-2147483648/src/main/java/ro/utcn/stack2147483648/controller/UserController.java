@@ -56,7 +56,12 @@ public class UserController {
         UserDetails userDetails = loadUserDetails(authRequest);
         String jwt = generateToken(userDetails);
         Long userId = getUserId(userDetails);
-        return new ResponseEntity<>(new AuthenticationResponse(userId, jwt), HttpStatus.CREATED);
+        String role = getUserRole(userId);
+        String status = getStatus(userId);
+        if (status.equals("banned")) {
+            return new ResponseEntity<>(new AuthenticationResponse(userId, jwt, role, status), HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(new AuthenticationResponse(userId, jwt, role, status), HttpStatus.CREATED);
     }
 
     @GetMapping("/user/{userId}")
@@ -67,6 +72,31 @@ public class UserController {
         }
         return new ResponseEntity<>(user.get(), HttpStatus.OK);
     }
+
+    @GetMapping("/user/score/{userId}")
+    public ResponseEntity<?> getUserScore(@PathVariable Long userId) {
+        Optional<Double> score = userService.getUserScore(userId);
+        if (score.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(score.get(), HttpStatus.OK);
+    }
+
+    private String getUserRole(Long userId) {
+        Optional<String> role = userService.getUserRole(userId);
+        if (role.isEmpty()) {
+            throw new UserNotFoundException("User not found");
+        }
+        return role.get();
+   }
+
+    private String getStatus(Long userId) {
+          Optional<String> status = userService.getUserStatus(userId);
+          if (status.isEmpty()) {
+                throw new UserNotFoundException("User not found");
+          }
+          return status.get();
+     }
 
     private void authenticateUser(AuthenticationRequest authRequest) {
         try {

@@ -29,8 +29,14 @@ export class AnswerServiceService {
   
   }
 
-  updateAnswer(answerDTO: any, userId: number): Observable<any> {
-    return this.http.put<[]>(BASIC_URL + 'api/answer/' + userId, answerDTO,
+  deleteAnswerById(idAnswer: number,idUser: number, role: string): Observable<any> {
+    return this.http.delete<[]>(BASIC_URL + 'api/answer/' + idAnswer + '/' + idUser + '/' + role,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  updateAnswer(answerDTO: any, userId: number, role: string): Observable<any> {
+    return this.http.put<[]>(BASIC_URL + 'api/answer/' + answerDTO + '/' + userId + '/' + role, answerDTO,
       { headers: this.createAuthorizationHeader() }
     );
   }

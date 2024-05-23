@@ -12,8 +12,9 @@
 
             <ng-template #questionList>
                 <div class="child" *ngFor="let question of questions">
-                    <div *ngIf="question.userId == userId">
+                    <div *ngIf="question.userId == userId || role == 'admin'">
                         <button mat-button [routerLink]="'/user/edit-question/' + question.id" routerLinkActive="active">Edit</button>
+                        <button mat-button (click) = "delete(question.id)">Delete</button>
                     </div>
                     <a [routerLink]="'/user/question/' + question.id" class="question-link">
                         <h2 class="question-title">{{ question.title }}</h2>

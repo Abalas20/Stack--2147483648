@@ -46,7 +46,7 @@ public class AnswerServiceImpl implements AnswerService {
             answer.setQuestion(question.get());
             answer.setUrl(answerDTO.getUrl());
             Answer savedAnswer = answerRepository.save(answer);
-            return Optional.of(new AnswerDTO(savedAnswer.getId(), savedAnswer.getBody(), getCreationDate(savedAnswer.getCreatedDate()), savedAnswer.getAuthor().getId(), savedAnswer.getQuestion().getId(), savedAnswer.getUrl(), user.get().getUsername(), 0));
+            return Optional.of(new AnswerDTO(savedAnswer.getId(), savedAnswer.getBody(), getCreationDate(savedAnswer.getCreatedDate()), savedAnswer.getAuthor().getId(), savedAnswer.getQuestion().getId(), savedAnswer.getUrl(), user.get().getUsername(), 0, user.get().getScore()));
         }
         return Optional.empty();
     }
@@ -55,31 +55,31 @@ public class AnswerServiceImpl implements AnswerService {
     @Transactional
     public Optional<List<AnswerDTO>> getAnswers(Long questionId) {
         return answerRepository.findAllByQuestionIdOrderByVoteCountDesc(questionId).map(answers -> answers.stream()
-                .map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(),answer.getUrl(), answer.getAuthor().getUsername(),getVoteCount(answer.getId())))
+                .map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(),answer.getUrl(), answer.getAuthor().getUsername(),getVoteCount(answer.getId()), answer.getAuthor().getScore()))
                 .toList());
     }
 
     @Override
     public Optional<AnswerDTO> getAnswer(Long answerId) {
-        return answerRepository.findById(answerId).map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(), answer.getUrl(), answer.getAuthor().getUsername(), answer.getVoteCount()));
+        return answerRepository.findById(answerId).map(answer -> new AnswerDTO(answer.getId(), answer.getBody(), getCreationDate(answer.getCreatedDate()), answer.getAuthor().getId(), answer.getQuestion().getId(), answer.getUrl(), answer.getAuthor().getUsername(), answer.getVoteCount(),  answer.getAuthor().getScore()));
     }
 
     @Override
-    public Optional<AnswerDTO> editAnswer(AnswerDTO answerDTO, Long userId) {
+    public Optional<AnswerDTO> editAnswer(AnswerDTO answerDTO, Long userId, String role) {
         Optional<Answer> answer = answerRepository.findById(answerDTO.getId());
-        if (answer.isPresent() && answer.get().getAuthor().getId().equals(userId)) {
+        if (answer.isPresent() && (answer.get().getAuthor().getId().equals(userId) || "admin".equals(role))) {
             answer.get().setBody(answerDTO.getBody());
             answer.get().setUrl(answerDTO.getUrl());
             Answer editedAnswer = answerRepository.save(answer.get());
-            return Optional.of(new AnswerDTO(editedAnswer.getId(), editedAnswer.getBody(), getCreationDate(editedAnswer.getCreatedDate()), editedAnswer.getAuthor().getId(), editedAnswer.getQuestion().getId(), editedAnswer.getUrl(), editedAnswer.getAuthor().getUsername(), editedAnswer.getVoteCount()));
+            return Optional.of(new AnswerDTO(editedAnswer.getId(), editedAnswer.getBody(), getCreationDate(editedAnswer.getCreatedDate()), editedAnswer.getAuthor().getId(), editedAnswer.getQuestion().getId(), editedAnswer.getUrl(), editedAnswer.getAuthor().getUsername(), editedAnswer.getVoteCount(),  editedAnswer.getAuthor().getScore()));
         }
         return Optional.empty();
     }
 
     @Override
-    public boolean deleteAnswer(Long answerId, Long userId) {
+    public boolean deleteAnswer(Long answerId, Long userId, String role) {
         Optional<Answer> answer = answerRepository.findById(answerId);
-        if (answer.isPresent() && answer.get().getAuthor().getId().equals(userId)) {
+        if (answer.isPresent() && (answer.get().getAuthor().getId().equals(userId) || "admin".equals(role))) {
             answerRepository.delete(answer.get());
             return true;
         } else {

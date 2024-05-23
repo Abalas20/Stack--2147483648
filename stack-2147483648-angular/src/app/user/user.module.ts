@@ -26,6 +26,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { DialogBoxComponent } from './components/dialog-box/dialog-box.component';
 import { FilteredByUserQuestionComponent } from './components/filtered-by-user-question/filtered-by-user-question.component';
 import { FilteredByTagQuestionComponent } from './components/filtered-by-tag-question/filtered-by-tag-question.component';
+import { DialogConfirmComponent } from './components/dialog-confirm/dialog-confirm.component';
 
 @NgModule({
   declarations: [
@@ -38,6 +39,7 @@ import { FilteredByTagQuestionComponent } from './components/filtered-by-tag-que
     DialogBoxComponent,
     FilteredByUserQuestionComponent,
     FilteredByTagQuestionComponent,
+    DialogConfirmComponent,
   ],
   imports: [
     CommonModule,

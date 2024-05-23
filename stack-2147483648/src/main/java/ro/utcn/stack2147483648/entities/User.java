@@ -50,8 +50,11 @@ public class User {
     @Column(name = "role", columnDefinition = "VARCHAR(255) DEFAULT 'user'")
     private String role;
 
-    @Column(name = "score", columnDefinition = "INT DEFAULT 0")
-    private int score;
+    @Column(name = "score")
+    private double score;
+
+    @Column(name = "status")
+    private String status;
 
     public User(String lastName, String firstName, String phone, String email, String password, String username) {
         this.lastName = lastName;
@@ -63,6 +66,7 @@ public class User {
         // Set default values for role and score
         this.role = "user";
         this.score = 0;
+        this.status = "active";
     }
 
     public User() {

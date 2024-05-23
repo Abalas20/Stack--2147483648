@@ -30,7 +30,7 @@ export class AuthService {
         map((res: HttpResponse<any>) => {
           const body = res.body;
           if (body) {
-            this.storage.saveUser(body.userId);
+            this.storage.saveUser(body.userId, body.role, body.status);
             this.storage.saveToken(body.jwtToken);
           }
           return res;

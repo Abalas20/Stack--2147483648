@@ -12,7 +12,7 @@ public interface AnswerService {
 
     Optional<AnswerDTO> getAnswer(Long answerId);
 
-    Optional<AnswerDTO> editAnswer(AnswerDTO answerDTO, Long userId);
+    Optional<AnswerDTO> editAnswer(AnswerDTO answerDTO, Long userId, String role);
 
-    boolean deleteAnswer(Long answerId, Long userId);
+    boolean deleteAnswer(Long answerId, Long userId, String role);
 }

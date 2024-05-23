@@ -40,6 +40,15 @@ public class AnswerVoteServiceImpl implements AnswerVoteService {
         answerVote.setValue(answerVoteDTO.getValue());
         AnswerVote createAnswerVote = answerVoteRepository.save(answerVote);
 
+        //Update user score for answer author
+        if (answerVote.getValue() == 1) {
+            updateUserScore(answer.getAuthor().getId(), 5);
+        } else {
+            updateUserScore(answer.getAuthor().getId(), -2.5);
+            //update the score of the user who voted
+            updateUserScore(user.getId(), -1.5);
+        }
+
         return convertToDTO(createAnswerVote);
     }
 
@@ -50,6 +59,11 @@ public class AnswerVoteServiceImpl implements AnswerVoteService {
         return !answer.getAuthor().getId().equals(user.getId());
     }
 
+    private void updateUserScore(long userId, double value) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setScore(user.getScore() + value);
+        userRepository.save(user);
+    }
 
     public Optional<AnswerVoteDTO> convertToDTO(AnswerVote answerVote) {
         if (answerVote != null) {

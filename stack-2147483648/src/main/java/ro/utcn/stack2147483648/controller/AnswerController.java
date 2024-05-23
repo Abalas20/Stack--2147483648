@@ -38,9 +38,9 @@ public class AnswerController {
         }
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<?> editAnswer(@RequestBody AnswerDTO answerDTO, @PathVariable Long userId) {
-        Optional<AnswerDTO> editedAnswerDTO = answerService.editAnswer(answerDTO, userId);
+    @PutMapping("/{userId}/{role}")
+    public ResponseEntity<?> editAnswer(@RequestBody AnswerDTO answerDTO, @PathVariable Long userId, @PathVariable String role) {
+        Optional<AnswerDTO> editedAnswerDTO = answerService.editAnswer(answerDTO, userId, role);
         if (editedAnswerDTO.isEmpty()) {
             return ResponseEntity.badRequest().body("Something went wrong!");
         } else {
@@ -48,10 +48,9 @@ public class AnswerController {
         }
     }
 
-    //delete answer
-    @DeleteMapping("/{answerId}/{userId}")
-    public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId, @PathVariable Long userId) {
-        if (answerService.deleteAnswer(answerId, userId)) {
+    @DeleteMapping("/{answerId}/{userId}/{role}")
+    public ResponseEntity<?> deleteAnswer(@PathVariable Long answerId, @PathVariable Long userId, @PathVariable String role) {
+        if (answerService.deleteAnswer(answerId, userId, role)) {
             return ResponseEntity.ok("Answer deleted!");
         } else {
             return ResponseEntity.badRequest().body("Something went wrong!");

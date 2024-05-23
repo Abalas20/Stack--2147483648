@@ -61,9 +61,9 @@ public class QuestionController {
         }
     }
 
-    @PutMapping("/question/{userId}")
-    public ResponseEntity<?> updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable Long userId) {
-        Optional<QuestionDTO> updatedQuestionDTO = questionService.updateQuestion(questionDTO, userId);
+    @PutMapping("/question/{userId}/{role}")
+    public ResponseEntity<?> updateQuestion(@RequestBody QuestionDTO questionDTO, @PathVariable Long userId, @PathVariable String role) {
+        Optional<QuestionDTO> updatedQuestionDTO = questionService.updateQuestion(questionDTO, userId, role);
         if (updatedQuestionDTO.isEmpty()) {
             return ResponseEntity.badRequest().body("Update failed!");
         } else {
@@ -71,9 +71,9 @@ public class QuestionController {
         }
     }
 
-    @DeleteMapping("/question/{questionId}/{userId}")
-    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId, @PathVariable Long userId) {
-        if (questionService.deleteQuestion(questionId, userId)) {
+    @DeleteMapping("/question/{questionId}/{userId}/{role}")
+    public ResponseEntity<?> deleteQuestion(@PathVariable Long questionId, @PathVariable Long userId, @PathVariable String role) {
+        if (questionService.deleteQuestion(questionId, userId, role)) {
             return ResponseEntity.ok("Question deleted!");
         } else {
             return ResponseEntity.badRequest().body("Question not found!");

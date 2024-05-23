@@ -12,8 +12,8 @@ public interface QuestionService {
     List<Tag> getAllTags();
     AllQuestionResponseDTO getAllQuestions(int pageNumber);
     Optional<QuestionDTO> getQuestion(Long questionId);
-    Optional<QuestionDTO> updateQuestion(QuestionDTO questionDTO, Long userId);
-    boolean deleteQuestion(Long questionId, Long userId);
+    Optional<QuestionDTO> updateQuestion(QuestionDTO questionDTO, Long userId, String role);
+    boolean deleteQuestion(Long questionId, Long userId, String role);
     AllQuestionResponseDTO searchQuestionsByText(String text, int pageNumber);
     AllQuestionResponseDTO searchQuestionsByUsername(String username, int pageNumber);
     AllQuestionResponseDTO searchQuestionsByTag(String tag, int pageNumber);

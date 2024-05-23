@@ -12,9 +12,9 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String role;
-    private int score;
+    private double score;
 
-    public UserDTO(Long id, String lastName, String firstName, String phone, String email, String password, String username, String role, int score) {
+    public UserDTO(Long id, String lastName, String firstName, String phone, String email, String password, String username, String role, double score) {
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;

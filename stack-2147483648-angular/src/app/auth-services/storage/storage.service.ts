@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 
 const TOKEN_KEY = 'c_token';
 const USER_KEY = 'user_id';
+const USER_ROLE = 'user_role';
+const USER_STATUS = 'user_status';
 
 @Injectable({
   providedIn: 'root'
@@ -13,10 +15,12 @@ export class StorageService {
 
   constructor() { }
 
-  public saveUser(user: any) {
+  public saveUser(userId: any, role: any, status: any) {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(USER_KEY);
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
+      localStorage.setItem(USER_KEY, JSON.stringify(userId));
+      localStorage.setItem(USER_ROLE, role);
+      localStorage.setItem(USER_STATUS, status);
     }
   }
 
@@ -29,6 +33,11 @@ export class StorageService {
 
   static getToken(): string {
     return typeof localStorage !== 'undefined' ? localStorage.getItem(TOKEN_KEY) || '' : '';
+  }
+
+
+  static getUserRole(): string {
+    return typeof localStorage !== 'undefined' ? localStorage.getItem(USER_ROLE) || '' : '';
   }
 
   static isUserLoggedIn(): boolean {

@@ -50,7 +50,7 @@ export class EditAnswerComponent {
       id: this.answer.id
     }
     console.log(requestBody);
-    this.service.updateAnswer(requestBody, StorageService.getUserId()).subscribe((res) => {
+    this.service.updateAnswer(requestBody, StorageService.getUserId(), StorageService.getUserRole()).subscribe((res) => {
       console.log(res);
       this.validateForm.reset();
       window.location.reload();

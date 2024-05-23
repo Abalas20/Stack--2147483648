@@ -15,4 +15,5 @@ public class QuestionDTO {
     private String author;
     private String creationDate;
     private String url;
+    private int score;
 }

@@ -37,12 +37,26 @@ public class QuestionVoteServiceImpl implements QuestionVoteService {
         questionVote.setUser(user);
         questionVote.setValue(questionVoteDTO.getValue());
         QuestionVote createQuestionVote = questionVoteRepository.save(questionVote);
+
+        //Update user score for question author
+        if (questionVote.getValue() == 1) {
+            updateUserScore(question.getAuthor().getId(), 2.5);
+        } else {
+            updateUserScore(question.getAuthor().getId(), -1.5);
+        }
+
         return convertToDTO(createQuestionVote);
     }
 
     @Override
     public int getVoteCount(Long questionId) {
         return questionVoteRepository.findAllByQuestionId(questionId).stream().mapToInt(QuestionVote::getValue).sum();
+    }
+
+    private void updateUserScore(long userId, double value) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setScore(user.getScore() + value);
+        userRepository.save(user);
     }
 
     private boolean canVote(User user, Question question) {

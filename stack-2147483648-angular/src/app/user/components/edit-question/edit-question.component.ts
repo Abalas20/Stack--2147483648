@@ -128,8 +128,11 @@ export class EditQuestionComponent {
       id: this.questionId,
     };
     console.log(requestBody);
+    console.log("Waiting for response...");
     this.isSubmitting = true;
-    this.service.updateQuestion(requestBody, StorageService.getUserId()).subscribe((res) => {
+    console.log(StorageService.getUserId());
+    console.log(StorageService.getUserRole());
+    this.service.updateQuestion(requestBody, StorageService.getUserId(), StorageService.getUserRole()).subscribe((res) => {
       console.log(res);
       this.isSubmitting = false;
       this.validateForm.reset();

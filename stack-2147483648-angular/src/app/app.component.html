@@ -17,6 +17,10 @@
         <button mat-button (click)="myQuestions()" routerLinkActive="active">See my questions</button>
         <button mat-button routerLink="/user/question" routerLinkActive="active">Post Question</button>
         <button mat-button (click)="logout()" routerLinkActive="active">Logout</button>
+        <div *ngIf="role == 'admin'">
+            <button  mat-button routerLink="/user/manage" routerLinkActive="active">Manage users</button>
+        </div>
+        
     </mat-toolbar>
 </div>
 <router-outlet></router-outlet>

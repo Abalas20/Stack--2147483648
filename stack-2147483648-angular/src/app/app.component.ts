@@ -17,6 +17,7 @@ export class AppComponent implements OnInit {
   isUserLoggedIn!: boolean;
   animal!: string;
   user: any;
+  role!: string
 
   constructor(
     private router: Router,
@@ -34,6 +35,7 @@ export class AppComponent implements OnInit {
   }
 
   private updateUserLoggedInStatus(): void {
+    this.role = StorageService.getUserRole();
     this.isUserLoggedIn = StorageService.isUserLoggedIn();
   }
 

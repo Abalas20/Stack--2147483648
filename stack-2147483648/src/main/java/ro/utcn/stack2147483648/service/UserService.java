@@ -1,6 +1,7 @@
 package ro.utcn.stack2147483648.service;
 
 
+import ro.utcn.stack2147483648.dto.AllUsersDTO;
 import ro.utcn.stack2147483648.dto.SignupDTO;
 import ro.utcn.stack2147483648.dto.UserDTO;
 import ro.utcn.stack2147483648.entities.User;
@@ -22,4 +23,8 @@ public interface UserService {
     Optional<String> getUserRole(Long userId);
 
     Optional<String> getUserStatus(Long userId);
+
+    AllUsersDTO getAllUsers(int pageNumber);
+
+    UserDTO manageStatus(Long userId);
 }

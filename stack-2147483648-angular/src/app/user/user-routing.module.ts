@@ -9,6 +9,7 @@ import { EditAnswerComponent } from './components/edit-answer/edit-answer.compon
 import { FilteredByTextQuestionComponent } from './components/filtered-by-text-question/filtered-by-text-question.component';
 import { FilteredByUserQuestionComponent } from './components/filtered-by-user-question/filtered-by-user-question.component';
 import { FilteredByTagQuestionComponent } from './components/filtered-by-tag-question/filtered-by-tag-question.component';
+import { ManageUsersComponent } from './components/manage-users/manage-users.component';
 
 const routes: Routes = [
   {path:'dashboard', component: DashboardComponent, canActivate: [userGuard]},
@@ -19,6 +20,7 @@ const routes: Routes = [
   {path:'question/filtered/:text', component: FilteredByTextQuestionComponent, canActivate: [userGuard]},
   {path:'question/filtered/username/:username', component: FilteredByUserQuestionComponent, canActivate: [userGuard]},
   {path:'question/filtered/tag/:tag', component: FilteredByTagQuestionComponent, canActivate: [userGuard]},
+  {path:'manage', component: ManageUsersComponent, canActivate: [userGuard]}
 ];
 
 @NgModule({

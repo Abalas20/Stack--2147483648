@@ -1,6 +1,10 @@
 package ro.utcn.stack2147483648.service.impl;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import ro.utcn.stack2147483648.dto.AllUsersDTO;
 import ro.utcn.stack2147483648.dto.SignupDTO;
 import ro.utcn.stack2147483648.dto.UserDTO;
 import ro.utcn.stack2147483648.entities.User;
@@ -12,6 +16,8 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+
+    public static final int PAGE_SIZE = 5;
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
@@ -58,6 +64,32 @@ public class UserServiceImpl implements UserService {
         return userRepository.findById(userId).map(User::getStatus);
     }
 
+    @Override
+    public AllUsersDTO getAllUsers(final int pageNumber) {
+        Pageable paging = PageRequest.of(pageNumber, PAGE_SIZE);
+        Page<User> userPage = userRepository.findAllByOrderByScoreDesc(paging);
+        AllUsersDTO allUsersDTO = getUsersDTO(userPage);
+        allUsersDTO.setPageNumber(userPage.getNumber());
+        allUsersDTO.setTotalPages(userPage.getTotalPages());
+        return allUsersDTO;
+    }
+
+    @Override
+    public UserDTO manageStatus(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        if (user.getRole().equals("admin")) {
+            throw new IllegalArgumentException("Admin status cannot be changed!");
+        }
+        user.setStatus(user.getStatus().equals("active") ? "banned" : "active");
+        return convertToUserDTO(userRepository.save(user));
+    }
+
+    private AllUsersDTO getUsersDTO(Page<User> userPage) {
+        AllUsersDTO allUsersDTO = new AllUsersDTO();
+        allUsersDTO.setUsers(userPage.map(this::convertToUserDTO).getContent());
+        return allUsersDTO;
+    }
+
     private User convertToUser(SignupDTO signupDTO) {
         return new User(
                 signupDTO.getLastName(),
@@ -79,7 +111,8 @@ public class UserServiceImpl implements UserService {
                 user.getPassword(),
                 user.getUsername(),
                 user.getRole(),
-                user.getScore()
+                user.getScore(),
+                user.getStatus()
         );
     }
 }

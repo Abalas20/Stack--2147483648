@@ -36,7 +36,7 @@ export class AnswerServiceService {
   }
 
   updateAnswer(answerDTO: any, userId: number, role: string): Observable<any> {
-    return this.http.put<[]>(BASIC_URL + 'api/answer/' + answerDTO + '/' + userId + '/' + role, answerDTO,
+    return this.http.put<[]>(BASIC_URL + 'api/answer/' + userId + '/' + role, answerDTO,
       { headers: this.createAuthorizationHeader() }
     );
   }

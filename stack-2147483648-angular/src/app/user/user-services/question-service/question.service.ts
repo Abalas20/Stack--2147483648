@@ -82,6 +82,19 @@ export class QuestionService {
     );
   }
 
+  getAllUsers(pageNumber: number): Observable<any> {
+
+    return this.http.get<[]>(BASIC_URL + 'all-users/' + pageNumber,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
+  banUser(userId: number): Observable<string> {
+    return this.http.put<string>(BASIC_URL + 'ban-user/' + userId, null,
+      { headers: this.createAuthorizationHeader() }
+    );
+  }
+
   createAuthorizationHeader(): HttpHeaders {
     let authHeader: HttpHeaders = new HttpHeaders();
     return authHeader.set('Authorization', 'Bearer ' + StorageService.getToken());

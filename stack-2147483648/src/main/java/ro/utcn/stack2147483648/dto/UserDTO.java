@@ -13,8 +13,9 @@ public class UserDTO {
     private String lastName;
     private String role;
     private double score;
+    private String status;
 
-    public UserDTO(Long id, String lastName, String firstName, String phone, String email, String password, String username, String role, double score) {
+    public UserDTO(Long id, String lastName, String firstName, String phone, String email, String password, String username, String role, double score, String status) {
         this.id = id;
         this.lastName = lastName;
         this.firstName = firstName;
@@ -24,5 +25,6 @@ public class UserDTO {
         this.username = username;
         this.role = role;
         this.score = score;
+        this.status = status;
     }
 }

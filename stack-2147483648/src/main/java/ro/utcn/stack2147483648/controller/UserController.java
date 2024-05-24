@@ -82,6 +82,20 @@ public class UserController {
         return new ResponseEntity<>(score.get(), HttpStatus.OK);
     }
 
+    @GetMapping("/all-users/{pageNumber}")
+    public ResponseEntity<?> getAllUsers(@PathVariable int pageNumber) {
+        return new ResponseEntity<>(userService.getAllUsers(pageNumber), HttpStatus.OK);
+    }
+
+    @PutMapping("/ban-user/{userId}")
+    public ResponseEntity<?> manageStatus(@PathVariable Long userId) {
+        UserDTO user = userService.manageStatus(userId);
+        if (user != null) {
+            return new ResponseEntity<>(user, HttpStatus.OK);
+        }
+        return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);
+    }
+
     private String getUserRole(Long userId) {
         Optional<String> role = userService.getUserRole(userId);
         if (role.isEmpty()) {

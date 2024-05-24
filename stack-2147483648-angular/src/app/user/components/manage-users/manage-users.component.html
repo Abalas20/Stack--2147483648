@@ -1,0 +1,41 @@
+<div style="min-height: 91vh; padding: 30px;" *ngIf="users" class="background">
+    <div class="container">
+        <ng-container *ngIf="users.length <= 0; else userList">
+            <mat-card class="empty-message">
+                <mat-card-content>
+                    <mat-icon>sentiment_dissatisfied</mat-icon>
+                    <p>No users found.</p>
+                </mat-card-content>
+            </mat-card>
+        </ng-container>
+
+        <ng-template #userList>
+            <table class="user-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Score</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let user of users">
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.score }}</td>
+                        <td>{{ user.status }}</td>
+                        <td>
+                            <button mat-button (click)="toggleBan(user.id)">
+                               ban
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </ng-template>
+
+        <div class="pagination">
+            <mat-paginator class="color-pagination" [length]="total" [pageIndex]="pageNum" [pageSize]="5" (page)="pageIndexChange($event)"></mat-paginator>
+        </div>
+    </div>
+</div>

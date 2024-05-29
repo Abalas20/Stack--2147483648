@@ -26,6 +26,7 @@ export class AuthService {
         catchError(error => {
           console.error('Login failed:', error);
           return throwError(() => error);
+         
         }),
         map((res: HttpResponse<any>) => {
           const body = res.body;

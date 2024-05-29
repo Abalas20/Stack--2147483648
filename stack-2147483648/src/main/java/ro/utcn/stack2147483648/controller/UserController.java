@@ -17,6 +17,7 @@ import ro.utcn.stack2147483648.dto.UserDTO;
 import ro.utcn.stack2147483648.entities.User;
 import ro.utcn.stack2147483648.exception.UserNotCreatedException;
 import ro.utcn.stack2147483648.exception.UserNotFoundException;
+import ro.utcn.stack2147483648.service.EmailService;
 import ro.utcn.stack2147483648.service.UserService;
 import ro.utcn.stack2147483648.service.jwt.JwtService;
 
@@ -30,12 +31,14 @@ public class UserController {
     private final UserDetailsService userDetailsService;
     private final UserService userService;
     private final JwtService jwtService;
+    private final EmailService emailService;
 
-    public UserController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserService userService, JwtService jwtService) {
+    public UserController(AuthenticationManager authenticationManager, UserDetailsService userDetailsService, UserService userService, JwtService jwtService, EmailService emailService) {
         this.authenticationManager = authenticationManager;
         this.userDetailsService = userDetailsService;
         this.userService = userService;
         this.jwtService = jwtService;
+        this.emailService = emailService;
     }
 
     @PostMapping("/sign-up")
@@ -91,6 +94,7 @@ public class UserController {
     public ResponseEntity<?> manageStatus(@PathVariable Long userId) {
         UserDTO user = userService.manageStatus(userId);
         if (user != null) {
+            emailService.sendSimpleEmail(user.getEmail(), "Account status", "Your account status has changed!");
             return new ResponseEntity<>(user, HttpStatus.OK);
         }
         return new ResponseEntity<>("User not found", HttpStatus.NOT_FOUND);

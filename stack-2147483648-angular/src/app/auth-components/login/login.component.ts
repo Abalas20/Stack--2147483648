@@ -32,8 +32,12 @@ export class LoginComponent {
       const response = await this.service.login(this.loginForm.value).toPromise();
       console.log(response);
       this.router.navigateByUrl("user/dashboard");
-    } catch (error) {
+    } catch (error: any) { 
       console.error(error);
+      if(error.error.status === 'banned') {
+        this.snackbar.open('User is banned', 'Close', { duration: 5000, panelClass: 'error-snackbar' });
+      
+      } else 
       this.snackbar.open('Bad credentials', 'Close', { duration: 5000, panelClass: 'error-snackbar' });
     }
   }

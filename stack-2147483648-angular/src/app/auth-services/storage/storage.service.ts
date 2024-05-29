@@ -53,6 +53,8 @@ export class StorageService {
     if (typeof localStorage !== 'undefined') {
       localStorage.removeItem(TOKEN_KEY);
       localStorage.removeItem(USER_KEY);
+      localStorage.removeItem(USER_ROLE);
+      localStorage.removeItem(USER_STATUS);
       }
   }
 }
